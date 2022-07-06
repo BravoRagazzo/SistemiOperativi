@@ -51,6 +51,11 @@ public class Main {
 				i++;
 			}
             
+            for (int j : maxArray) {
+				System.out.println(maxArray[j]);
+			}
+            
+            System.out.println("FINE");
             
                        
         } catch (Exception exc) {
@@ -60,11 +65,12 @@ public class Main {
 
     private static void writeTextFile(String path, int[] data, int width) throws IOException {
         FileWriter f = new FileWriter(path);
+        
         // Write pixel info to file, comma separated
         for(int i = 0; i < data.length; i++) {
             String s = Integer.toString(data[i]);
             f.write(s + ", ");
-            if (i % width == 0) f.write(System.lineSeparator());
+            if ((i+1) % width == 0) f.write(System.lineSeparator());
         }
         f.close();
     }
@@ -80,7 +86,6 @@ public class Main {
 			int j = 0;
 			
 			String line = br.readLine();
-			line = br.readLine();
 			
 			while(line!=null) {
 				entries = line.split(", ");
@@ -93,10 +98,12 @@ public class Main {
 					String g = "";
 					String b = "";
 					
+					
 					for(int i=0;i<8;i++) {
 						r += spacket[8 + i];
-						g += spacket[8 + 2*i];
-						b += spacket[8 + 3*i];
+						g += spacket[16 + i];
+						b += spacket[24 + i];
+						
 					}
 					
 					int rint = Integer.parseInt(r,2);
@@ -105,15 +112,21 @@ public class Main {
 					
 					row.getPixel().add(new Pixel(rint,gint,bint));
 					
+					System.out.println(new Pixel(rint,gint,bint));
+					
 					j++;
 					fw.write(rint + "," + gint + "," + bint + ";");
 					if (j % width == 0) fw.write(System.lineSeparator());
 				
 				}
 				
-				rows.add(row);
 				
+				rows.add(row);
 			}
+			
+			br.close();
+			fr.close();
+			fw.close();
 			
 			return rows;
 			
@@ -152,6 +165,9 @@ public class Main {
 				}
 				
 			}
+			
+			fr.close();
+			br.close();
 			
 			return  max;
 			

@@ -14,7 +14,7 @@ public class Row implements Runnable {
 	@Override
 	public void run() {
 		
-		int cnt = 1;
+		int cnt = 0;
 		
 		for (Pixel pixel2 : pixel) {
 			for (Pixel pixel3 : pixel) {
@@ -25,7 +25,7 @@ public class Row implements Runnable {
 					if(cnt > max) {
 						max = cnt;
 					}
-					cnt = 1;
+					cnt = 0;
 				}
 			}
 		}
