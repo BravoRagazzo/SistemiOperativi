@@ -15,7 +15,7 @@ public class Main {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/specchi_neri.JPG"));
+            BufferedImage image = ImageIO.read(new File("src/test/test.JPG"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
@@ -51,6 +51,7 @@ public class Main {
 				i++;
 			}
             
+            System.out.println(maxArray);
             
                        
         } catch (Exception exc) {
