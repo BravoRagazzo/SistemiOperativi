@@ -10,12 +10,13 @@ import java.util.ArrayList;
 
 public class Main {
 
+	
     public static void main(String[] args) {
         try {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/specchi_neri.JPG"));
+            BufferedImage image = ImageIO.read(new File("src/test/specchi_neri2.JPG"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
@@ -44,16 +45,16 @@ public class Main {
 			}
             
             i = 0;
-            int[] maxArray = new int[height];
+            
+            int maxArray[] = new int[height];
+            
             for (Row row : rows) {
-				thread[i].join();
+            	thread[i].join();
             	maxArray[i] = row.getMax();
+            	System.out.println(maxArray[i]);
 				i++;
 			}
             
-            for (int j : maxArray) {
-				System.out.println(maxArray[j]);
-			}
             
             System.out.println("FINE");
             
@@ -112,7 +113,7 @@ public class Main {
 					
 					row.getPixel().add(new Pixel(rint,gint,bint));
 					
-					System.out.println(new Pixel(rint,gint,bint));
+//					System.out.println(new Pixel(rint,gint,bint));
 					
 					j++;
 					fw.write(rint + "," + gint + "," + bint + ";");
@@ -122,6 +123,8 @@ public class Main {
 				
 				
 				rows.add(row);
+				System.out.println(row);
+				row = new Row();
 			}
 			
 			br.close();
@@ -131,7 +134,6 @@ public class Main {
 			return rows;
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
@@ -139,46 +141,13 @@ public class Main {
     	
     }
     
-    private static int countSubstrings(String path) {
-		try {
-			FileReader fr = new FileReader(path);
-			BufferedReader br = new BufferedReader(fr);
-			String line = br.readLine();
-			String[] entries;
-			int cnt = 0;
-			int max = 0;
-			
-			while(line!=null) {
-			
-				entries = line.split(";");
-				line = br.readLine();
-				
-				for (int i=0;i<entries.length;i++) {
-					for(int j=i+1;j<entries.length;j++) {
-						if(entries[i].equals(entries[j])) {
-							cnt++;
-							if(max < cnt) {
-								max = cnt;
-							}
-						}
-					}
-				}
-				
-			}
-			
-			fr.close();
-			br.close();
-			
-			return  max;
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return 0;
+    private static void textToImage(String path, int width, int height, int[] data) throws IOException {
+        MemoryImageSource mis = new MemoryImageSource(width, height, data, 0, width);
+        Image im = Toolkit.getDefaultToolkit().createImage(mis);
+
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        bufferedImage.getGraphics().drawImage(im, 0, 0, null);
+        ImageIO.write(bufferedImage, "jpg", new File(path));
+        System.out.println("Done! Check the result");
     }
 }
