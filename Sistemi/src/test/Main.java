@@ -7,6 +7,8 @@ import java.awt.image.MemoryImageSource;
 import java.awt.image.PixelGrabber;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Main {
 
@@ -18,7 +20,7 @@ public class Main {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/eclipse.jpg"));
+            BufferedImage image = ImageIO.read(new File("src/test/sea.jpg"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
@@ -48,14 +50,33 @@ public class Main {
             i = 0;
             int maxArray[] = new int[height];
             int lastPosArray[] = new int[height];
+            Pixel p = new Pixel(0,0,0);
+            
             for (Row row : rows) {
             	thread[i].join();
             	maxArray[i] = row.getMax();
-            	
             	lastPosArray[i] = row.getLastPos();
+            	p.setR(row.getAvgPixel().getR() + p.getR());
+            	p.setG(row.getAvgPixel().getG() + p.getG());
+            	p.setB(row.getAvgPixel().getB() + p.getB());
 //            	System.out.println(maxArray[i]);
 				i++;
 			}
+            
+            p.setR(p.getR()/height);
+            p.setG(p.getG()/height);
+            p.setB(p.getB()/height);
+
+	       if((Math.abs(p.getR()-p.getG()) < 30) && (Math.abs(p.getR()-p.getB()) < 30) && (Math.abs(p.getG()-p.getB()) < 30)) {
+	    	   System.out.println("TINTA NEUTRA");
+	       } else if(p.getR() > p.getG() && p.getR() > p.getB()) {
+        	   System.out.println("TINTA ROSSA");
+           } else if(p.getG() > p.getR() && p.getG() > p.getB()) {
+        	   System.out.println("TINTA VERDE");
+           } else if(p.getB() > p.getR() && p.getB() > p.getG()) {
+        	   System.out.println("TINTA BLU");
+           }
+	       
             System.out.println("FINE -------------- THREAD");
             
             
@@ -64,17 +85,6 @@ public class Main {
             textToImage("src/output.jpg", width, height, RGBtoBinary(rows, height, width));
 
             System.out.println("FINE");
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
                        
         } catch (Exception exc) {
         	exc.printStackTrace();
