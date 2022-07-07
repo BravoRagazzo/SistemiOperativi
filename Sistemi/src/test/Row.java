@@ -7,7 +7,7 @@ public class Row implements Runnable {
 	private ArrayList<Pixel> pixel;
 	private int max;
 	private boolean done = false;
-	
+	private int lastPos;
 	
 	public Row() {
 		pixel = new ArrayList<Pixel>();
@@ -19,6 +19,8 @@ public class Row implements Runnable {
 		
 		int max = 1;
 		int cnt = 0;
+		int i = 0;
+		int j = 0;
 		
 		for (Pixel pixel2 : pixel) {
 			for (Pixel pixel3 : pixel) {
@@ -28,15 +30,19 @@ public class Row implements Runnable {
 				} else {
 					if(cnt > max) {
 						max = cnt;
+						j = i;
 					}
 					cnt = 0;
 				}
+				i++;
 			}
 			cnt = 0;
+			i = 0;
 		}
+		
 		this.max = max;
 		done = true;
-		
+		lastPos = j;
 	}
 	
 	
@@ -60,6 +66,13 @@ public class Row implements Runnable {
 	}
 
 	
+	public int getLastPos() {
+		while(!done);
+		return lastPos;
+	}
+
+
+
 	@Override
 	public String toString() {
 

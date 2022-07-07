@@ -10,13 +10,15 @@ import java.util.ArrayList;
 
 public class Main {
 
+	int maxArray[];
+	int lastPosArray[];
 	
     public static void main(String[] args) {
         try {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/specchi_neri2.JPG"));
+            BufferedImage image = ImageIO.read(new File("src/test/test.PNG"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
@@ -47,15 +49,23 @@ public class Main {
             i = 0;
             
             int maxArray[] = new int[height];
-            
+            int lastPosArray[] = new int[height];
             for (Row row : rows) {
             	thread[i].join();
             	maxArray[i] = row.getMax();
+            	
+            	lastPosArray[i] = row.getLastPos();
             	System.out.println(maxArray[i]);
 				i++;
 			}
             
             
+            Reprinter(height, maxArray, lastPosArray, rows);
+            
+            
+            
+            textToImage("src/output.jpg", width, height, RGBtoBinary(rows, height, width));
+
             System.out.println("FINE");
             
                        
@@ -123,7 +133,7 @@ public class Main {
 				
 				
 				rows.add(row);
-				System.out.println(row);
+				//System.out.println(row);
 				row = new Row();
 			}
 			
@@ -140,6 +150,59 @@ public class Main {
     	return null;
     	
     }
+    
+    
+    
+    private static void Reprinter(int n, int maxArray[], int lastPosArray[], ArrayList<Row> rows) {
+    	
+    	Thread[] thread = new Thread[n];
+    	
+    
+        int i=0;
+        for (Row row : rows) {
+			thread[i] = new Thread(new Reprint(maxArray[i], lastPosArray[i], row));
+			i++;
+        }
+        
+        for (Thread thread2 : thread) {
+			thread2.start();
+		
+ 	
+    	
+    }
+ }
+    
+    
+    
+    private static int[] RGBtoBinary(ArrayList<Row> rows, int height, int width) {
+    	
+    
+    	int data[] = new int[height * width];
+    	int i = 0;
+    	
+    	for (Row row : rows) {
+			
+    		
+    		for (Pixel pixels : row.getPixel()) {
+				
+    			int binaryNum = 0;
+    	    	binaryNum+= (pixels.getR()&0x000000FF); 
+       	    	binaryNum = binaryNum << 8;
+    			binaryNum += (pixels.getG()&0x000000FF);
+    			binaryNum = binaryNum << 8;
+    			binaryNum += (pixels.getB()&0x000000FF); 		
+    			binaryNum = binaryNum|0XFF000000;
+				data[i] = binaryNum;
+				i++;
+			}
+		}
+    	
+    	return data;
+    }
+    
+    
+    
+    
     
     private static void textToImage(String path, int width, int height, int[] data) throws IOException {
         MemoryImageSource mis = new MemoryImageSource(width, height, data, 0, width);
