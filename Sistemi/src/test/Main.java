@@ -18,7 +18,7 @@ public class Main {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/test.PNG"));
+            BufferedImage image = ImageIO.read(new File("src/test/test.png"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
@@ -55,7 +55,7 @@ public class Main {
             	maxArray[i] = row.getMax();
             	
             	lastPosArray[i] = row.getLastPos();
-            	System.out.println(maxArray[i]);
+//            	System.out.println(maxArray[i]);
 				i++;
 			}
             
@@ -166,10 +166,21 @@ public class Main {
         
         for (Thread thread2 : thread) {
 			thread2.start();
-		
- 	
     	
-    }
+        }
+        
+        for (Thread thread2 : thread) {
+			try {
+				thread2.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+        
+        
+        
+        
  }
     
     
