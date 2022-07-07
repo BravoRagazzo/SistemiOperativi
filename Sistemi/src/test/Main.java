@@ -18,7 +18,7 @@ public class Main {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/nike.png"));
+            BufferedImage image = ImageIO.read(new File("src/test/eclipse.jpg"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];

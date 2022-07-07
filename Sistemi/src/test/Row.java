@@ -22,7 +22,12 @@ public class Row implements Runnable {
 		int idx = 0;
 		Pixel p = pixel.get(0);
 		for(int i = 1; i < pixel.size(); i++) {
-			if(pixel.get(i).compareTo(p)==1) {
+			if(i == pixel.size() - 1) {
+				if(count > max) {
+					max = count;
+					idx = i-1;					
+				}
+			} else if(pixel.get(i).compareTo(p)==1) {
 				count ++;
 			} else {
 				p = pixel.get(i);
