@@ -17,32 +17,24 @@ public class Row implements Runnable {
 	
 	public void run() {
 		
-		int cnt = 0;
-		int max = 0;
+
+		int count = 0;
 		int idx = 0;
-		int j = 0;
-		int i = 0;
-		
-		for(i = 0; i < pixel.size()-1; i++) {
-			j = i+1;
-				if(j == pixel.size() - 1) {
-					max = cnt;
-					idx = j;
-					break;
-				} else if((pixel.get(i).compareTo(pixel.get(j)) == 1)) {
-					cnt++;
-				} else if(cnt>max) {
-						max = cnt;
-						i = j;
-						idx = j;
-						cnt = 0;
+		Pixel p = pixel.get(0);
+		for(int i = 1; i < pixel.size(); i++) {
+			if(pixel.get(i).compareTo(p)==1) {
+				count ++;
+			} else {
+				p = pixel.get(i);
+				if(count > max) {
+					max = count;
+					idx = i-1;
 				}
+				count = 0;
+			}
 		}
-		
-		this.max = max;
-		done = true;
-		lastPos = idx;
-		
+		this.lastPos = idx;
+		this.done = true;
 		
 	}
 	

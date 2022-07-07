@@ -18,12 +18,11 @@ public class Main {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/test.png"));
+            BufferedImage image = ImageIO.read(new File("src/test/nike.png"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
             
-           
             
             // Retrieve pixel info and store in 'pixels' variable
             PixelGrabber pgb = new PixelGrabber(image, 0, 0, width, height, pixels, 0, width);
@@ -47,7 +46,6 @@ public class Main {
 			}
             
             i = 0;
-            
             int maxArray[] = new int[height];
             int lastPosArray[] = new int[height];
             for (Row row : rows) {
@@ -58,15 +56,24 @@ public class Main {
 //            	System.out.println(maxArray[i]);
 				i++;
 			}
-            
-            
-            Reprinter(height, maxArray, lastPosArray, rows);
+            System.out.println("FINE -------------- THREAD");
             
             
             
+    		Reprinter(height, maxArray, lastPosArray, rows);
             textToImage("src/output.jpg", width, height, RGBtoBinary(rows, height, width));
 
             System.out.println("FINE");
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
                        
         } catch (Exception exc) {
@@ -173,7 +180,6 @@ public class Main {
 			try {
 				thread2.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
