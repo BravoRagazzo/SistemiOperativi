@@ -18,7 +18,7 @@ public class Reprint implements Runnable{
 	@Override
 	public void run() {
 
-		System.out.println(lastPos + "," + max);
+//		System.out.println(lastPos + "," + max);
 		
 		for(int i = lastPos; i > (lastPos - max); i--) {
 			row.getPixel().get(i).setR(255);

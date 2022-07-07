@@ -25,7 +25,7 @@ public class Row implements Runnable {
 			if(i == pixel.size() - 1) {
 				if(count > max) {
 					max = count;
-					idx = i-1;					
+					idx = i;					
 				}
 			} else if(pixel.get(i).compareTo(p)==1) {
 				count ++;
