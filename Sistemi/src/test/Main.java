@@ -7,8 +7,6 @@ import java.awt.image.MemoryImageSource;
 import java.awt.image.PixelGrabber;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class Main {
 
@@ -20,7 +18,7 @@ public class Main {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/sea.jpg"));
+            BufferedImage image = ImageIO.read(new File("src/test/eclipse.jpg"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
@@ -52,6 +50,8 @@ public class Main {
             int lastPosArray[] = new int[height];
             Pixel p = new Pixel(0,0,0);
             
+            
+            
             for (Row row : rows) {
             	thread[i].join();
             	maxArray[i] = row.getMax();
@@ -62,6 +62,7 @@ public class Main {
 //            	System.out.println(maxArray[i]);
 				i++;
 			}
+            
             
             p.setR(p.getR()/height);
             p.setG(p.getG()/height);
@@ -79,10 +80,21 @@ public class Main {
 	       
             System.out.println("FINE -------------- THREAD");
             
+            Reprinter(height, maxArray, lastPosArray, rows);
+            int [][] mat =	new int[2][height * width];
+            		 mat = RGBtoBinary(rows, height, width);
+            int []col1 = new int[height*width];
+            int []col2 = new int[height*width];
+            
+            for (int j = 0; j < height*width; j++) {
+            	col1[j] = mat[j][0];
+            	col2[j] = mat[j][1];
+            }
             
             
-    		Reprinter(height, maxArray, lastPosArray, rows);
-            textToImage("src/output.jpg", width, height, RGBtoBinary(rows, height, width));
+            textToImage("src/output.jpg", width, height, col1);
+            textToImage("src/output2.jpg", width, height, col2);
+            
 
             System.out.println("FINE");
                        
@@ -125,20 +137,23 @@ public class Main {
 					String r = "";
 					String g = "";
 					String b = "";
-					
+					String a = "";
 					
 					for(int i=0;i<8;i++) {
+						a += spacket[i];
 						r += spacket[8 + i];
 						g += spacket[16 + i];
 						b += spacket[24 + i];
 						
 					}
 					
+					int aint = Integer.parseInt(a,2);
 					int rint = Integer.parseInt(r,2);
 					int gint = Integer.parseInt(g,2);
 					int bint = Integer.parseInt(b,2);
 					
-					row.getPixel().add(new Pixel(rint,gint,bint));
+					row.getPixel().add(new Pixel(aint,rint,gint,bint));
+					row.getPixel2().add(new Pixel(aint,rint,gint,bint));
 					
 //					System.out.println(new Pixel(rint,gint,bint));
 					
@@ -177,7 +192,7 @@ public class Main {
     
         int i=0;
         for (Row row : rows) {
-			thread[i] = new Thread(new Reprint(maxArray[i], lastPosArray[i], row));
+			thread[i] = new Thread(new Reprint(maxArray[i], lastPosArray[i], row.getPixel()));
 			i++;
         }
         
@@ -193,34 +208,49 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-        
-        
-        
-        
+
  }
     
     
     
-    private static int[] RGBtoBinary(ArrayList<Row> rows, int height, int width) {
+    private static int[][] RGBtoBinary(ArrayList<Row> rows, int height, int width) {
     	
     
-    	int data[] = new int[height * width];
+    	int data[][] = new int[height * width][2];
     	int i = 0;
+    	int j = 0;
     	
     	for (Row row : rows) {
 			
-    		
     		for (Pixel pixels : row.getPixel()) {
 				
     			int binaryNum = 0;
-    	    	binaryNum+= (pixels.getR()&0x000000FF); 
+    			
+    			binaryNum += (pixels.getA()&0x000000FF);
+    			binaryNum = binaryNum << 8;
+    	    	binaryNum += (pixels.getR()&0x000000FF); 
        	    	binaryNum = binaryNum << 8;
     			binaryNum += (pixels.getG()&0x000000FF);
     			binaryNum = binaryNum << 8;
     			binaryNum += (pixels.getB()&0x000000FF); 		
-    			binaryNum = binaryNum|0XFF000000;
-				data[i] = binaryNum;
+				data[i][0] = binaryNum;
 				i++;
+			}
+    		
+    			
+    		for (Pixel pixels : row.getPixel2()) {
+				
+    			int binaryNum2 = 0;
+    			
+    			binaryNum2 += (pixels.getA()&0x000000FF);
+    			binaryNum2 = binaryNum2 << 8;
+    	    	binaryNum2 += (pixels.getR()&0x000000FF); 
+       	    	binaryNum2 = binaryNum2 << 8;
+    			binaryNum2 += (pixels.getG()&0x000000FF);
+    			binaryNum2 = binaryNum2 << 8;
+    			binaryNum2 += (pixels.getB()&0x000000FF); 		
+				data[j][1] = binaryNum2;
+				j++;
 			}
 		}
     	

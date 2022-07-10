@@ -1,12 +1,24 @@
 package test;
 
-public class Pixel {
-	private int r,g,b;
+import java.util.Comparator;
+
+public class Pixel implements Comparator<Pixel>{
+	private int r,g,b, a;
+	private int avg;
+	
+	public Pixel(int a, int r,int g,int b) {
+		this.a = a;
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		avg = (r+g+b)/3;
+	}
 	
 	public Pixel(int r,int g,int b) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
+		avg = (r+g+b)/3;
 	}
 	
 	public int compareTo(Pixel p) {
@@ -18,6 +30,8 @@ public class Pixel {
 		}
 		
 	}
+	
+	
 
 	public int getR() {
 		return r;
@@ -43,11 +57,34 @@ public class Pixel {
 		this.b = b;
 	}
 
-	@Override
-	public String toString() {
-		return "Pixel " + r + "," +  g  + "," + b + ";";
+	public int getA() {
+		return a;
 	}
 	
+	public void setA(int a) {
+		this.a = a;
+	}
+
+	
+	public int getAvg() {
+		return avg;
+	}
+
+	@Override
+	public String toString() {
+		return "Pixel " + a + "," + r + "," +  g  + "," + b + ";";
+	}
+
+	@Override
+	public int compare(Pixel o1, Pixel o2) {
+
+		if(o1.getAvg() > o2.getAvg())
+			return 1;
+		else if (o1.getAvg() < o2.getAvg())
+			return -1;
+		else
+			return 0;
+	}
 	
 	
 }

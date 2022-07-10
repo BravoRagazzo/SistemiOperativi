@@ -1,10 +1,12 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Row implements Runnable {
 
 	private ArrayList<Pixel> pixel;
+	private ArrayList<Pixel> pixel2;
 	private int max;
 	private boolean done = false;
 	private int lastPos;
@@ -12,11 +14,18 @@ public class Row implements Runnable {
 	
 	public Row() {
 		pixel = new ArrayList<Pixel>();
+		pixel2 = new ArrayList<Pixel>();
+
 	}
 	
 	@Override
 	
 	public void run() {
+		
+//Sorting pixels
+		Collections.sort(pixel2, new Pixel(0, 0, 0));
+		
+
 		
 //FIND MAXIMUM EQUAL PIXELS SEQUENCE
 		int count = 0;
@@ -48,6 +57,11 @@ public class Row implements Runnable {
 		}
 		
 		this.lastPos = idx;
+		
+
+
+		
+		
 		
 //RGB AVERAGE CALCULUM
 		
@@ -105,6 +119,10 @@ public class Row implements Runnable {
 	
 		return s+"\n";
 		
+	}
+
+	public ArrayList<Pixel> getPixel2() {
+		return pixel2;
 	}
 
 
