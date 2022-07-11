@@ -3,16 +3,9 @@ package test;
 import java.util.Comparator;
 
 public class Pixel implements Comparator<Pixel>{
-	private int r,g,b, a;
+	private int r,g,b;
 	private int avg;
 	
-	public Pixel(int a, int r,int g,int b) {
-		this.a = a;
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		avg = (r+g+b)/3;
-	}
 	
 	public Pixel(int r,int g,int b) {
 		this.r = r;
@@ -56,15 +49,6 @@ public class Pixel implements Comparator<Pixel>{
 	public void setB(int b) {
 		this.b = b;
 	}
-
-	public int getA() {
-		return a;
-	}
-	
-	public void setA(int a) {
-		this.a = a;
-	}
-
 	
 	public int getAvg() {
 		return avg;
@@ -72,7 +56,7 @@ public class Pixel implements Comparator<Pixel>{
 
 	@Override
 	public String toString() {
-		return "Pixel " + a + "," + r + "," +  g  + "," + b + ";";
+		return "Pixel " + "," + r + "," +  g  + "," + b + ";";
 	}
 
 	@Override

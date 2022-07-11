@@ -10,15 +10,16 @@ import java.util.ArrayList;
 
 public class Main {
 
-	int maxArray[];
-	int lastPosArray[];
+	private int maxArray[];
+	private int lastPosArray[];
+	private String path;
 	
     public static void main(String[] args) {
         try {
             System.out.println("Processing the image...");
 
             // Upload the image
-            BufferedImage image = ImageIO.read(new File("src/test/eclipse.jpg"));
+            BufferedImage image = ImageIO.read(new File("src/test/moto.jpg"));
             int width = image.getWidth();
             int height = image.getHeight();
             int[] pixels = new int[width * height];
@@ -137,23 +138,20 @@ public class Main {
 					String r = "";
 					String g = "";
 					String b = "";
-					String a = "";
 					
 					for(int i=0;i<8;i++) {
-						a += spacket[i];
 						r += spacket[8 + i];
 						g += spacket[16 + i];
 						b += spacket[24 + i];
 						
 					}
 					
-					int aint = Integer.parseInt(a,2);
 					int rint = Integer.parseInt(r,2);
 					int gint = Integer.parseInt(g,2);
 					int bint = Integer.parseInt(b,2);
 					
-					row.getPixel().add(new Pixel(aint,rint,gint,bint));
-					row.getPixel2().add(new Pixel(aint,rint,gint,bint));
+					row.getPixel().add(new Pixel(rint,gint,bint));
+					row.getPixel2().add(new Pixel(rint,gint,bint));
 					
 //					System.out.println(new Pixel(rint,gint,bint));
 					
@@ -226,14 +224,13 @@ public class Main {
 				
     			int binaryNum = 0;
     			
-    			binaryNum += (pixels.getA()&0x000000FF);
-    			binaryNum = binaryNum << 8;
     	    	binaryNum += (pixels.getR()&0x000000FF); 
        	    	binaryNum = binaryNum << 8;
     			binaryNum += (pixels.getG()&0x000000FF);
     			binaryNum = binaryNum << 8;
     			binaryNum += (pixels.getB()&0x000000FF); 		
-				data[i][0] = binaryNum;
+				binaryNum = binaryNum | 0xFF000000;
+    			data[i][0] = binaryNum;
 				i++;
 			}
     		
@@ -242,14 +239,13 @@ public class Main {
 				
     			int binaryNum2 = 0;
     			
-    			binaryNum2 += (pixels.getA()&0x000000FF);
-    			binaryNum2 = binaryNum2 << 8;
     	    	binaryNum2 += (pixels.getR()&0x000000FF); 
        	    	binaryNum2 = binaryNum2 << 8;
     			binaryNum2 += (pixels.getG()&0x000000FF);
     			binaryNum2 = binaryNum2 << 8;
     			binaryNum2 += (pixels.getB()&0x000000FF); 		
-				data[j][1] = binaryNum2;
+    			binaryNum2 = binaryNum2 | 0xFF000000;	
+    			data[j][1] = binaryNum2;
 				j++;
 			}
 		}
@@ -270,4 +266,19 @@ public class Main {
         ImageIO.write(bufferedImage, "jpg", new File(path));
         System.out.println("Done! Check the result");
     }
+
+    
+    
+    
+    
+    
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+  
+    
 }
