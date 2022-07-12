@@ -1,13 +1,13 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class CustomPanel extends JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int id;
 	
 	public CustomPanel(int id) {
@@ -23,9 +23,6 @@ public class CustomPanel extends JPanel {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
-	
 	
 	
 }

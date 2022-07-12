@@ -21,33 +21,22 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
-
-import model.Main;
 import model.Pixel;
 import model.Reprint;
 import model.Row;
-
 import java.awt.*;
-
 import view.MainView;
 
 public class MVCController {
 
 	private MainView v; // view
-	private Main m; // model
 	private String s;
 
-	public static void main(String[] args) {
-		Main m = new Main();
-		MainView v = new MainView();
-		MVCController c = new MVCController(m, v);
-	}
 
 
-	public MVCController(Main m, MainView v) {
+	public MVCController(MainView v) {
 
 		this.v = v;
-		this.m = m;
 		this.s = "";
 		initActionListeners();
 	}
@@ -79,8 +68,7 @@ public class MVCController {
 					jfc.addChoosableFileFilter(filter);
 					int returnValue = jfc.showOpenDialog(null);
 					if (returnValue == JFileChooser.APPROVE_OPTION) {
-						m.setPath(jfc.getSelectedFile().getPath()); 
-						s = m.getPath();
+						s = jfc.getSelectedFile().getPath(); 
 					} else s = "";
 
 
@@ -258,7 +246,6 @@ public class MVCController {
 							v.setI(1);
 						}
 				} catch (Exception e2) {
-					// TODO: handle exception
 					e2.printStackTrace();
 				}
 			}
@@ -285,7 +272,6 @@ public class MVCController {
 						v.setI(0);
 					}
 				} catch (Exception e2) {
-					// TODO: handle exception
 					e2.printStackTrace();
 				}
 			}
@@ -389,7 +375,6 @@ public class MVCController {
 
 
 				rows.add(row);
-				//System.out.println(row);
 				row = new Row();
 			}
 
