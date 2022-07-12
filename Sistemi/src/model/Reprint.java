@@ -1,4 +1,4 @@
-package test;
+package model;
 
 import java.util.ArrayList;
 
@@ -22,6 +22,7 @@ public class Reprint implements Runnable{
 //		System.out.println(lastPos + "," + max);
 		
 		for(int i = lastPos; i > (lastPos - max); i--) {
+//			pixel.get(i).setA(255);
 			pixel.get(i).setR(255);
 			pixel.get(i).setG(0);
 			pixel.get(i).setB(200);
