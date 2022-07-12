@@ -8,10 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.awt.image.PixelGrabber;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -60,7 +57,7 @@ public class MVCController {
 						v.getC1().show(v.getCardPane(),"0");
 						v.getMain().setVisible(true);					
 					}
-					
+
 					JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 					jfc.setDialogTitle("Select a jpg image");
 					jfc.setAcceptAllFileFilterUsed(false);
@@ -76,7 +73,7 @@ public class MVCController {
 					BufferedImage myPicture = ImageIO.read(new File(s));
 
 					myPicture = resize(myPicture, v);
-					
+
 					v.setPic(new JLabel(new ImageIcon(myPicture)));
 					v.getSource().add(v.getPic());
 					v.getMain().setVisible(true);
@@ -111,11 +108,8 @@ public class MVCController {
 					PixelGrabber pgb = new PixelGrabber(image, 0, 0, width, height, pixels, 0, width);
 					pgb.grabPixels();
 
-					// Write pixels to CSV
-					writeTextFile("src/raw.txt", pixels, width);
-
 					//Converting integers to binary values
-					ArrayList<Row> rows = integerToBinary("src/raw.txt", "src/rgb.txt", width);
+					ArrayList<Row> rows = integerToBinary(pixels, width, height);
 					Thread[] thread = new Thread[height];
 
 					int i=0;
@@ -186,16 +180,23 @@ public class MVCController {
 						col2[j] = mat[j][1];
 					}
 
+					String desk = System.getProperty("user.home") + "/Desktop/";
 
-					textToImage("src/output.png", width, height, col1);
-					textToImage("src/output2.png", width, height, col2);
+					File directory = new File(desk+"JpegProgram");
+						
+						if(! directory.exists()) {
+							directory.mkdir();
+						}
+					
+					textToImage(desk+"JpegProgram/output.png", width, height, col1);
+					textToImage(desk+"JpegProgram/output2.png", width, height, col2);
 
 
 					System.out.println("Elaborazione Terminata");
 
 
-					BufferedImage myPicture2 = ImageIO.read(new File("src/output.png"));
-					BufferedImage myPicture3 = ImageIO.read(new File("src/output2.png"));
+					BufferedImage myPicture2 = ImageIO.read(new File(desk+"JpegProgram/output.PNG"));
+					BufferedImage myPicture3 = ImageIO.read(new File(desk+"JpegProgram/output2.PNG"));
 
 					//SET LARGHEZZA, ADATTO ALTEZZA
 					//					myPicture2 = resize(myPicture2, (int)v.getImg().getSequence().getSize().getWidth(), (int)(myPicture2.getHeight()*v.getImg().getSequence().getSize().getWidth())/myPicture2.getWidth());
@@ -206,8 +207,8 @@ public class MVCController {
 					//SET NORMALE
 					myPicture2 = resize(myPicture2, v);
 					myPicture3 = resize(myPicture3, v);
-					
-					
+
+
 					v.setPic(new JLabel(new ImageIcon(myPicture2)));
 					v.getSequence().add(v.getPic());
 					v.getMain().setVisible(true);
@@ -235,16 +236,16 @@ public class MVCController {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-						if(v.getI() == 0) {
-							v.getC1().show(v.getCardPane(),"2");
-							v.setI(2);
-						} else if(v.getI() == 1) {
-							v.getC1().show(v.getCardPane(),"0");
-							v.setI(0);
-						} else if(v.getI() == 2) {
-							v.getC1().show(v.getCardPane(),"1");
-							v.setI(1);
-						}
+					if(v.getI() == 0) {
+						v.getC1().show(v.getCardPane(),"2");
+						v.setI(2);
+					} else if(v.getI() == 1) {
+						v.getC1().show(v.getCardPane(),"0");
+						v.setI(0);
+					} else if(v.getI() == 2) {
+						v.getC1().show(v.getCardPane(),"1");
+						v.setI(1);
+					}
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}
@@ -253,13 +254,13 @@ public class MVCController {
 
 
 		v.getSx().addActionListener(sxListener);
-		
-		
+
+
 		ActionListener dxListener = new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				try {
 					if(v.getI() == 0) {
 						v.getC1().show(v.getCardPane(),"1");
@@ -276,30 +277,30 @@ public class MVCController {
 				}
 			}
 		};
-		
-		
+
+
 		v.getDx().addActionListener(dxListener);
 
 	}
 
 
-	
+
 	private BufferedImage resize(BufferedImage img, MainView v) {
-	
-	if(img.getHeight()<v.getSource().getSize().getHeight() && img.getWidth()<v.getSource().getSize().getWidth()) {
-		return resize(img, (getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight())*img.getWidth())/img.getHeight(), getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight()));
-	} else if(img.getHeight()>v.getSource().getSize().getHeight() && img.getWidth()>v.getSource().getSize().getWidth()) {
-		return resize(img, (getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight())*img.getWidth())/img.getHeight(), getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight()));
-	} else if(img.getHeight()>v.getSource().getSize().getHeight() && img.getWidth()<v.getSource().getSize().getWidth()) {
-		return resize(img, (int)v.getSource().getSize().getHeight()*img.getWidth()/img.getHeight(), (int)v.getSource().getSize().getHeight());
-	} else if(img.getHeight()<v.getSource().getSize().getHeight() && img.getWidth()>v.getSource().getSize().getWidth()) {
-		return resize(img, (int)v.getSource().getSize().getWidth(), (int)v.getSource().getSize().getWidth()*img.getHeight()/img.getWidth());
+
+		if(img.getHeight()<v.getSource().getSize().getHeight() && img.getWidth()<v.getSource().getSize().getWidth()) {
+			return resize(img, (getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight())*img.getWidth())/img.getHeight(), getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight()));
+		} else if(img.getHeight()>v.getSource().getSize().getHeight() && img.getWidth()>v.getSource().getSize().getWidth()) {
+			return resize(img, (getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight())*img.getWidth())/img.getHeight(), getMin((int)v.getSource().getSize().getWidth(),(int)v.getSource().getSize().getHeight()));
+		} else if(img.getHeight()>v.getSource().getSize().getHeight() && img.getWidth()<v.getSource().getSize().getWidth()) {
+			return resize(img, (int)v.getSource().getSize().getHeight()*img.getWidth()/img.getHeight(), (int)v.getSource().getSize().getHeight());
+		} else if(img.getHeight()<v.getSource().getSize().getHeight() && img.getWidth()>v.getSource().getSize().getWidth()) {
+			return resize(img, (int)v.getSource().getSize().getWidth(), (int)v.getSource().getSize().getWidth()*img.getHeight()/img.getWidth());
+		}
+
+		return img;
 	}
-		
-	return img;
-	}
-	
-	
+
+
 	public BufferedImage resize(BufferedImage img, int newW, int newH) { 
 		Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
 		BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
@@ -311,49 +312,29 @@ public class MVCController {
 		return dimg;
 	}  
 
-
-	private void writeTextFile(String path, int[] data, int width) throws IOException {
-		FileWriter f = new FileWriter(path);
-
-		// Write pixel info to file, comma separated
-		for(int i = 0; i < data.length; i++) {
-			String s = Integer.toString(data[i]);
-			f.write(s + ", ");
-			if ((i+1) % width == 0) f.write(System.lineSeparator());
-		}
-		f.close();
-	}
+	private  ArrayList<Row> integerToBinary(int[] pixels, int width, int height) {
 
 
-	private  ArrayList<Row> integerToBinary(String path, String path2, int width) {
-		try {
-			FileReader fr = new FileReader(path);
-			FileWriter fw = new FileWriter(path2);
-			BufferedReader br = new BufferedReader(fr);
-			String[] entries;
-			ArrayList<Row> rows = new ArrayList<Row>();
-			Row row = new Row();
-			int j = 0;
+		ArrayList<Row> rows = new ArrayList<Row>();
+		Row row = new Row();
 
-			String line = br.readLine();
 
-			while(line!=null) {
-				entries = line.split(", ");
-				line = br.readLine();
+		for(int i = 0; i < height; i++) {
 
-				for (String string : entries) {
-					String component  = Integer.toBinaryString(Integer.parseInt(string));
+			for(int j = 0; j < width; j++) {
+
+					String component  = Integer.toBinaryString(pixels[(width*i)+j]);
 					char[] spacket = component.toCharArray();
-					//					String a = "";
+
 					String r = "";
 					String g = "";
 					String b = "";
 
-					for(int i=0;i<8;i++) {
-						//						a += spacket[i];
-						r += spacket[8 + i];
-						g += spacket[16 + i];
-						b += spacket[24 + i];
+					for(int k=0;k<8;k++) {
+
+						r += spacket[8 + k];
+						g += spacket[16 + k];
+						b += spacket[24 + k];
 
 					}
 
@@ -367,30 +348,16 @@ public class MVCController {
 
 					//					System.out.println(new Pixel(rint,gint,bint));
 
-					j++;
-					fw.write(rint + "," + gint + "," + bint + ";");
-					if (j % width == 0) fw.write(System.lineSeparator());
-
 				}
+			
+			rows.add(row);
+			row = new Row();
 
-
-				rows.add(row);
-				row = new Row();
 			}
-
-			br.close();
-			fr.close();
-			fw.close();
-
-			return rows;
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-
+		
+		return rows;
 	}
+
 
 
 	private void Reprinter(int n, int maxArray[], int lastPosArray[], ArrayList<Row> rows) {
@@ -483,6 +450,6 @@ public class MVCController {
 			return h;
 		else
 			return w;
-		
+
 	}
 }

@@ -58,9 +58,6 @@ public class Row implements Runnable {
 		
 		this.lastPos = idx;
 		
-
-
-		
 		
 		
 //RGB AVERAGE CALCULUM
